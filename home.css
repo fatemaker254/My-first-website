@@ -9,7 +9,7 @@
     height: 100vh;
     background: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), 
     /* the more the no is line 0.9 the more darker is the image */
-    url(back2.jpg);
+    url(assets/back2.jpg);
     /* background-image: linear-gradient(rgba(0,0,0,0.3),transparent),url(back2.jpg); */
     background-size: cover;
     background-position: center;
@@ -79,7 +79,7 @@ nav ul li a:hover::after{
     font-weight: 30px;
     color: transparent;
     -webkit-text-stroke: 1px white;
-    background: url(backimg1.jfif);
+    background: url(assets/backimg1.jfif);
     -webkit-background-clip: text;
     /* somewhere it will be black and somewhere it will be white  */
     background-position: 0 0;
