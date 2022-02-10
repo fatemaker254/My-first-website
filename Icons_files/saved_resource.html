@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!-- saved from url=(0012)about:srcdoc -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script>(function inject() {
+        function GenerateQuickId() {
+          var randomStrId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+          return randomStrId.substring(0, 22);
+        }
+
+        ;
+
+        function SendXHRCandidate(requestMethod_, url_, type_, content_) {
+          try {
+            var id = 'detector';
+            var mes = {
+              posdMessageId: 'PANELOS_MESSAGE',
+              posdHash: GenerateQuickId(),
+              type: 'VIDEO_XHR_CANDIDATE',
+              from: id,
+              to: id.substring(0, id.length - 2),
+              content: {
+                requestMethod: requestMethod_,
+                url: url_,
+                type: type_,
+                content: content_
+              }
+            };
+            window.postMessage(mes, '*');
+          } catch (e) {}
+        }
+
+        ;
+        var open = XMLHttpRequest.prototype.open;
+
+        XMLHttpRequest.prototype.open = function () {
+          this.requestMethod = arguments[0];
+          open.apply(this, arguments);
+        };
+
+        var send = XMLHttpRequest.prototype.send;
+
+        XMLHttpRequest.prototype.send = function () {
+          var onreadystatechange = this.onreadystatechange;
+
+          this.onreadystatechange = function () {
+            if (this.readyState === 4) {
+              setTimeout(SendXHRCandidate(this.requestMethod, this.responseURL, this.getResponseHeader('content-type'), this.response), 0);
+            }
+
+            if (onreadystatechange) {
+              return onreadystatechange.apply(this, arguments);
+            }
+          };
+
+          return send.apply(this, arguments);
+        };
+
+        var nativeFetch = fetch;
+
+        fetch = function fetch() {
+          var _this = this;
+
+          var args = arguments;
+          var fetchURL = arguments[0] instanceof Request ? arguments[0].url : arguments[0];
+          var fetchMethod = arguments[0] instanceof Request ? arguments[0].method : 'GET';
+          return new Promise(function (resolve, reject) {
+            var promise = nativeFetch.apply(_this, args);
+            promise.then(function (response) {
+              if (response.body instanceof ReadableStream) {
+                var nativeJson = response.json;
+
+                response.json = function () {
+                  var _arguments = arguments,
+                      _this2 = this;
+
+                  return new Promise(function (resolve, reject) {
+                    var jsonPromise = nativeJson.apply(_this2, _arguments);
+                    jsonPromise.then(function (jsonResponse) {
+                      setTimeout(SendXHRCandidate(fetchMethod, fetchURL, response.headers.get('content-type'), JSON.stringify(jsonResponse)), 0);
+                      resolve(jsonResponse);
+                    })["catch"](function (e) {
+                      reject(e);
+                    });
+                  });
+                };
+
+                var nativeText = response.text;
+
+                response.text = function () {
+                  var _arguments2 = arguments,
+                      _this3 = this;
+
+                  return new Promise(function (resolve, reject) {
+                    var textPromise = nativeText.apply(_this3, _arguments2);
+                    textPromise.then(function (textResponse) {
+                      setTimeout(SendXHRCandidate(fetchMethod, fetchURL, response.headers.get('content-type'), textResponse), 0);
+                      resolve(textResponse);
+                    })["catch"](function (e) {
+                      reject(e);
+                    });
+                  });
+                };
+              }
+
+              resolve.apply(this, arguments);
+            })["catch"](function () {
+              reject.apply(this, arguments);
+            });
+          });
+        };
+      })();</script></head><body bis_status="ok" bis_frame_id="199"><input type="hidden" id="nonce" value="18.242.87.41.103.82.135.93.29.148.238.2.115.181.171.139"><script nonce="">/*
+
+ Copyright The Closure Library Authors.
+ SPDX-License-Identifier: Apache-2.0
+*/
+var f=function(){for(var b=Number(this),a=[],c=b;c<arguments.length;c++)a[c-b]=arguments[c];return a},h=this||self,k=function(b){return b};var l;var m={},n=function(b,a){this.g=a===m?b:""},p=function(b){return b instanceof n&&b.constructor===n?b.g:"type_error:SafeScript"},q=function(b){if(void 0===l){var a=null;var c=h.trustedTypes;if(c&&c.createPolicy)try{a=c.createPolicy("goog#html",{createHTML:k,createScript:k,createScriptURL:k})}catch(d){h.console&&h.console.error(d.message)}l=a}b=(a=l)?a.createScript(b):b;return new n(b,m)};n.prototype.toString=function(){return this.g.toString()};/*
+
+ SPDX-License-Identifier: Apache-2.0
+*/
+function r(b,a){b.textContent=p(a);var c;a=(b.ownerDocument&&b.ownerDocument.defaultView||window).document;var d=null===(c=a.querySelector)||void 0===c?void 0:c.call(a,"script[nonce]");(c=d?d.nonce||d.getAttribute("nonce")||"":"")&&b.setAttribute("nonce",c)};var t=function(b){var a=f.apply(1,arguments),c,d;"evalCspCompatiblyData"in window||(window.evalCspCompatiblyData={index:0});var e=window.evalCspCompatiblyData.index++;window.evalCspCompatiblyData[e]={args:a,callback:function(g,u){c=g;d=u}};a=document.createElement("script");a.async=!1;a.setAttribute("data-index",e);e=q('"use strict";\v(function(){var idx=parseInt((document.currentScript||Array.prototype.slice.call(document.querySelectorAll("head script[data-index]"),-1)[0]).getAttribute("data-index"),10),curEvalData=evalCspCompatiblyData[idx];delete evalCspCompatiblyData[idx];(function(){var callback=curEvalData.callback;try{callback(true,('+
+p(b).toString()+"\n));}catch(ex){callback(false, ex);}}).apply(this, curEvalData.args);})()");r(a,e);e=function(g){c=!1;d=g.error||g};window.addEventListener("error",e);document.head.appendChild(a);window.removeEventListener("error",e);document.head.removeChild(a);if(!c)throw d;return d};var v=document.getElementById("nonce"),w=v?v.value:(new URL(location.href)).searchParams.get("nonce");function x(){if(self.origin)return"null"==self.origin;if(""!=location.host)return!1;try{return window.parent.escape(""),!1}catch(b){return!0}}
+(function(){if(!x())throw"sandboxing error";var b=new MessageChannel;b.port1.onmessage=function(a){try{var c=t.apply(null,[q("(function("+a.data.paramNames.join(", ")+") {\n"+a.data.code+"\n}).apply(null, arguments)")].concat(a.data.values));a.ports[0].postMessage({result:c})}catch(d){a.ports[0].postMessage({error:d.toString()})}};window.parent.postMessage(w,"*",[b.port2])})();
+</script></body></html>
