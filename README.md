@@ -4,7 +4,7 @@
 
 # How to run this on your System
 ```
-git clone https://github.com/sunami09/My-first-website.git
+git clone https://github.com/fatemaker254/My-first-website.git
 cd .\My-first-website\
 start .\home.html
 ```
